@@ -1,7 +1,6 @@
 /*
     TP1 - Dessins d'Enfants
-    Version 1 (complète)
-    Date: 16/12/2023
+    Date: 17/12/2023
 */
 
 import { 
@@ -11,24 +10,39 @@ import {
     Circle, 
     Point } from " https://cdn.jsdelivr.net/gh/didiercrunch/cours-420-301-ah@tp1.1/modules-examples/mod.js";
 
+
 // VARIABLES PORTÉE GLOBALE
 const svg = document.getElementById("canvas");
 const table = document.getElementById("table-body");
-const STEP = 10;
+const STEP = 10; // 10 pixels
 let circles = [];
 
-// FONCTIONS LOGIQUE APPLICATION
+// FONCTIONS DE LA LOGIQUE DE L'APPLICATION
 
+/**
+ * Vide la liste circles de tous ses éléments.
+ */
 function emptyCircles(){
     circles.splice(0, circles.length);
 }
 
+/**
+ * Créé et ajoute un cercle dans la liste circles selon
+ * la position et le rayon spécicifiés
+ * @param {Number} x (coordonnée du centre en x)
+ * @param {Number} y (coordonnée du centre en y)
+ * @param {Number} r (rayon du cercle)
+ * @returns {Circle}
+ */
 function addCircle(x, y, r){
     const c = new Circle(new Point(x,y), r, Date.now());
     circles.push(c);
     return c;
 }
 
+/**
+ * Fait le rendu de l'image SVG et du tableau des cercles créés
+ */
 function render(){
     populateTable(table,circles, 
                         pointToString, 
@@ -40,6 +54,12 @@ function render(){
     drawCircles(svg,circles);
 }
 
+/**
+ * Récupère l'ID d'un cercle dans le 1er élément HTML <td> de
+ * l'élément HTML <tr> parent d'un icône visé par un événement 'clic'.
+ * @param {EVENT} event
+ * @returns {Number} id d'un cercle
+ */
 function retrieveCircleId(event){
     return Number(event.target.
                         parentElement.
@@ -47,16 +67,25 @@ function retrieveCircleId(event){
                                 firstElementChild.textContent);
 }
 
+/**
+ * Recherche un cercle selon son ID dans la liste circles.
+ * @param {Number} circleId
+ * @returns {Circle}
+ */
 function getCircleById(circleId){
-    console.log(circleId)
     for (const circle of circles){
-        console.log(circle.getId())
         if(circle.getId() === circleId){
             return circle;
         }
     }
 }
 
+/**
+ * Modifie la position en x ou en y du centre du cercle d'un nombre
+ * donné de pixels (step) selon la direction spécifiée par l'icône 'flèche'.
+ * @param {Event} event
+ * @param {Number} step
+ */
 function moveCircle(event, step){
 
     const d = retrieveArrowDirection(event);
@@ -72,6 +101,12 @@ function moveCircle(event, step){
     }
 }
 
+/**
+ * Récupère la direction spécifiée par la flèche dans la
+ * classe de l'élément HTML visé
+ * @param {Event} event
+ * @returns {String}
+ */
 function retrieveArrowDirection(event){
     const directions = ['up', 'down', 'left', 'right'];
     const arrowSpec = event.target.className;
@@ -83,6 +118,11 @@ function retrieveArrowDirection(event){
     }
 }
 
+/**
+ * Modifie la couleur d'un cercle sur une échelle de gris
+ * en sélectionnant un code RGB de façon aléatoire.
+ * @param {EVENT} event
+ */
 function changeCircleColor(event){
 
     const c = getCircleById(retrieveCircleId(event));
@@ -92,9 +132,9 @@ function changeCircleColor(event){
 
 // GESTIONNAIRES D'ÉVÉNEMENTS CRÉÉS dans main.js
 
-document.getElementById("draw-simple-circle").addEventListener("click", simpleCercleBtn);
+document.getElementById("draw-simple-circle").addEventListener("click", simpleCircleBtn);
 
-function simpleCercleBtn(){
+function simpleCircleBtn(){
     emptyCircles();
     addCircle(250,250,50);
     render();
@@ -127,12 +167,7 @@ function reverseOrderBtn(){
 
 // GESTIONNAIRES D'ÉVÉNEMENTS CRÉÉS PAR LA FONCTION IMPORTÉE populateTable()
 
-// Dans populateTable: lors de la création du td : pointToString(circle.getCenter())
-// La méthode getCenter() est donc appelée pour chaque cercle de circles lors du rendu
-// et c'est ce qui donne sa valeur au paramètre center
 function pointToString(center){
-    console.log('Dans pointToString');
-    console.log(center);
     return `(${center.getX()}, ${center.getY()})`;
 }
 
