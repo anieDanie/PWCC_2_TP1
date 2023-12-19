@@ -11,6 +11,21 @@ import {
     Point } from " https://cdn.jsdelivr.net/gh/didiercrunch/cours-420-301-ah@tp1.1/modules-examples/mod.js";
 
 
+
+/*
+ * Correction.
+ * Une variable globale devrait toujours être immutable (sauf force majeur).  Ici, `document.getElementById("canvas")`
+ * est mutable, vous seriez mieux avec la variable `const svgId = "canvas"`.
+ * 
+ * Si vous voulez vraiment avoir une "variable globale mutable", vous pouvez toujours créer une
+ * fonction qui prend aucun argument et qui retourne une nouvelle version de la variable à chaque
+ * fois qu'elle est appelé.
+ * 
+ * function svg(){
+ *     return document.getElementById("canvas");
+ * } 
+ */
+
 // VARIABLES PORTÉE GLOBALE
 const svg = document.getElementById("canvas");
 const table = document.getElementById("table-body");
@@ -170,6 +185,23 @@ function reverseOrderBtn(){
 function pointToString(center){
     return `(${center.getX()}, ${center.getY()})`;
 }
+
+/**
+ * Correction 
+ * J'imagine que la documentation n'est pas claire mais, la fonction "onClickUp"
+ * reçoit en argument l'ID du cercle qui a été cliqué.  Il n'est pas nécessaire d'utiliser 
+ * event (et je me demande même pourquoi ça fonctionne).
+ * 
+ * Vous pouvez donc simplifier l'action de onClickUp par quelque chose comme:
+ * 
+ * function onClickUp(circleId){
+ *     const circle = getCircleById(circleId);
+ *     circle.setCenter(new Point(circle.getCenter().getX(), 
+                                  circle.getCenter().getY() - 10));
+       }
+ *     render();
+ * }
+ */
 
 function onClickUp(){
     const up = (- STEP);
