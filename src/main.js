@@ -1,6 +1,6 @@
 /*
     TP1 - Dessins d'Enfants
-    Date: 17/12/2023
+    Date: 19/12/2023
 */
 
 import { 
@@ -55,19 +55,6 @@ function render(){
 }
 
 /**
- * Récupère l'ID d'un cercle dans le 1er élément HTML <td> de
- * l'élément HTML <tr> parent d'un icône visé par un événement 'clic'.
- * @param {EVENT} event
- * @returns {Number} id d'un cercle
- */
-function retrieveCircleId(event){
-    return Number(event.target.
-                        parentElement.
-                            parentElement.
-                                firstElementChild.textContent);
-}
-
-/**
  * Recherche un cercle selon son ID dans la liste circles.
  * @param {Number} circleId
  * @returns {Circle}
@@ -81,51 +68,13 @@ function getCircleById(circleId){
 }
 
 /**
- * Modifie la position en x ou en y du centre du cercle d'un nombre
- * donné de pixels (step) selon la direction spécifiée par l'icône 'flèche'.
- * @param {Event} event
- * @param {Number} step
- */
-function moveCircle(event, step){
-
-    const d = retrieveArrowDirection(event);
-    const c = getCircleById(retrieveCircleId(event));
-
-    if (d === 'up' || d === 'down'){
-        c.setCenter(new Point(  c.getCenter().getX(), 
-                                c.getCenter().getY() + step));
-    }
-    if( d === 'left' || d === 'right'){
-        c.setCenter(new Point(  c.getCenter().getX() + step, 
-                                c.getCenter().getY()));
-    }
-}
-
-/**
- * Récupère la direction spécifiée par la flèche dans la
- * classe de l'élément HTML visé
- * @param {Event} event
- * @returns {String}
- */
-function retrieveArrowDirection(event){
-    const directions = ['up', 'down', 'left', 'right'];
-    const arrowSpec = event.target.className;
-
-    for (const direction of directions){
-        if(arrowSpec.includes(direction)){
-            return direction;
-        }
-    }
-}
-
-/**
  * Modifie la couleur d'un cercle sur une échelle de gris
  * en sélectionnant un code RGB de façon aléatoire.
- * @param {EVENT} event
+ * @param {INT} circleId
  */
-function changeCircleColor(event){
+function changeCircleColor(circleId){
 
-    const c = getCircleById(retrieveCircleId(event));
+    const c = getCircleById(circleId);
     // Sélection au hasard d'un entier entre 0 et 255
     c.setColor(randomColor(Math.floor(Math.random()*256)));
 }
@@ -171,32 +120,36 @@ function pointToString(center){
     return `(${center.getX()}, ${center.getY()})`;
 }
 
-function onClickUp(){
-    const up = (- STEP);
-    moveCircle(event, up);
+function onClickUp(circleId){
+    const circle = getCircleById(circleId);
+    circle.setCenter(new Point( circle.getCenter().getX(), 
+                                circle.getCenter().getY() - STEP));
     render();
 }
 
-function onClickDown(){
-    const down = (+ STEP);
-    moveCircle(event, down);
+function onClickDown(circleId){
+    const circle = getCircleById(circleId);
+    circle.setCenter(new Point( circle.getCenter().getX(), 
+                                circle.getCenter().getY() + STEP));
     render();
 }
 
-function onClickLeft(){
-    const left = (- STEP);
-    moveCircle(event, left);
-    render();
+function onClickLeft(circleId){
+    const circle = getCircleById(circleId);
+    circle.setCenter(new Point( circle.getCenter().getX() - STEP, 
+                                circle.getCenter().getY()));
+    render();    
 }
 
-function onClickRight(){
-    const right = (+ STEP);
-    moveCircle(event, right)
-    render();
+function onClickRight(circleId){
+    const circle = getCircleById(circleId);
+    circle.setCenter(new Point( circle.getCenter().getX() + STEP, 
+                                circle.getCenter().getY()));
+    render();     
 }
 
-function onClickPaint(){
-    changeCircleColor(event);
+function onClickPaint(circleId){
+    changeCircleColor(circleId);
     render();
 }
 
